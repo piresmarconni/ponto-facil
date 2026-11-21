@@ -62,7 +62,22 @@
 }
 
 body {
-  background-color: #f3f4f6;
+  background-color: #f4f5f2;
+}
+
+.app-body { background: #f4f5f2; }
+.app-main { background: #f4f5f2; }
+.app-sidebar nav a { min-height: 42px; }
+@media (max-width: 760px) {
+  .app-sidebar { width: 68px; }
+  .app-sidebar > div:first-child { padding: 14px 10px; }
+  .app-sidebar > div:first-child > div:first-child { justify-content: center; }
+  .app-sidebar > div:first-child > div:first-child > div { display: none; }
+  .app-sidebar > div:first-child > div:last-child { display: none; }
+  .app-sidebar nav { padding: 12px 7px; }
+  .app-sidebar nav p, .app-sidebar nav a span, .app-sidebar > div:last-child { display: none; }
+  .app-sidebar nav a { justify-content: center; padding: 10px 4px; }
+  .app-main { margin-left: 68px !important; }
 }
 
 *:focus-visible {

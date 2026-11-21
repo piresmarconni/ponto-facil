@@ -5,7 +5,6 @@ import { useState } from "react";
 import {
   BadgeHelp,
   BarChart3,
-  Camera,
   Clock,
   HelpCircle,
   Package,
@@ -41,7 +40,7 @@ const atalhos = [
   {
     tecla: "F4",
     acao: "Clientes",
-    descricao: "Abre a base de clientes e situacao de fiado.",
+    descricao: "Abre a base de clientes e seus contatos.",
     href: "/clientes",
   },
   {
@@ -61,12 +60,6 @@ const atalhos = [
     acao: "Ponto",
     descricao: "Abre o registro de ponto dos funcionarios.",
     href: "/registro-ponto",
-  },
-  {
-    tecla: "F9",
-    acao: "Cameras",
-    descricao: "Abre a tela de monitoramento.",
-    href: "/cameras",
   },
   {
     tecla: "F12",
@@ -93,7 +86,7 @@ const cards = [
   },
   {
     titulo: "Clientes",
-    texto: "Consultar contatos, CPF e status do fiado.",
+    texto: "Consultar contatos e dados cadastrais.",
     href: "/clientes",
     tecla: "F4",
     icon: Users,
@@ -107,7 +100,7 @@ const cards = [
   },
   {
     titulo: "Relatorios",
-    texto: "Ver resumo de vendas, produtos vendidos e dividas.",
+    texto: "Ver resumo de vendas e produtos vendidos.",
     href: "/relatorios",
     tecla: "F7",
     icon: BarChart3,
@@ -118,13 +111,6 @@ const cards = [
     href: "/registro-ponto",
     tecla: "F8",
     icon: Clock,
-  },
-  {
-    titulo: "Cameras",
-    texto: "Abrir monitoramento do estabelecimento.",
-    href: "/cameras",
-    tecla: "F9",
-    icon: Camera,
   },
 ];
 
@@ -192,65 +178,61 @@ export default function HomePage() {
   const [helpAberto, setHelpAberto] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="mb-8 flex items-start justify-between gap-6">
+    <div className="min-h-screen p-5 sm:p-8 lg:p-10">
+      <div className="mb-7 flex items-center justify-between border-b border-slate-200 pb-5">
         <div>
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-sky-600">
-            Painel operacional
+          <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.22em] text-teal-700">
+            Visão geral · Hoje
           </p>
-          <h1 className="text-3xl font-black text-slate-900">Dashboard</h1>
-          <p className="mt-2 max-w-2xl text-sm text-slate-500">
-            Acesse rapidamente as rotinas do sistema e use os atalhos de teclado
-            para operar sem depender do menu lateral.
+          <h1 className="text-3xl font-black tracking-tight text-slate-900">Bom dia, equipe</h1>
+          <p className="mt-1 max-w-2xl text-sm text-slate-500">
+            Seu espaço de trabalho para acompanhar a operação e acessar as rotinas do negócio.
           </p>
         </div>
 
         <button
           type="button"
           onClick={() => setHelpAberto(true)}
-          className="inline-flex items-center gap-2 border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 hover:border-sky-300 hover:text-sky-700"
+          className="inline-flex items-center gap-2 border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-700 hover:border-teal-500 hover:text-teal-800"
         >
           <HelpCircle size={18} />
           Ajuda F1
         </button>
       </div>
 
-      <section className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
-        <div className="border border-slate-200 bg-white p-5">
-          <span className="text-xs font-bold uppercase text-slate-400">
-            Atalho principal
-          </span>
-          <p className="mt-3 text-2xl font-black text-slate-900">F2</p>
-          <p className="mt-1 text-sm text-slate-500">Abrir vendas</p>
-        </div>
-        <div className="border border-slate-200 bg-white p-5">
-          <span className="text-xs font-bold uppercase text-slate-400">
-            Saida rapida
-          </span>
-          <p className="mt-3 text-2xl font-black text-slate-900">ESC</p>
-          <p className="mt-1 text-sm text-slate-500">Fechar ajuda ou voltar</p>
-        </div>
-        <div className="border border-slate-200 bg-white p-5">
-          <span className="text-xs font-bold uppercase text-slate-400">
-            Help
-          </span>
-          <p className="mt-3 text-2xl font-black text-slate-900">F1 / F12</p>
-          <p className="mt-1 text-sm text-slate-500">Mostrar comandos</p>
+      <section className="mb-7 grid grid-cols-1 gap-5 lg:grid-cols-[1.3fr_1fr]">
+        <Link href="/vendas" className="group relative flex min-h-52 flex-col justify-between overflow-hidden bg-slate-900 p-7 text-white transition hover:bg-slate-800">
+          <div className="absolute -right-10 -top-16 h-64 w-64 rounded-full border border-white/10" />
+          <div className="relative">
+            <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-teal-300">Acesso rápido · F2</span>
+            <h2 className="mt-3 text-3xl font-black tracking-tight">Começar uma venda</h2>
+            <p className="mt-2 text-sm text-slate-300">Abra o caixa, encontre produtos e registre o pagamento.</p>
+          </div>
+          <span className="relative mt-6 inline-flex w-fit items-center gap-2 border-b border-teal-300 pb-1 text-sm font-bold text-teal-200">Abrir caixa <span aria-hidden="true">→</span></span>
+        </Link>
+        <div className="grid grid-cols-2 gap-px border border-slate-200 bg-slate-200">
+          <div className="bg-white p-5"><span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Vendas</span><p className="mt-4 text-2xl font-black text-slate-900">F2</p><p className="mt-1 text-xs text-slate-500">Abrir caixa</p></div>
+          <div className="bg-white p-5"><span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Ajuda</span><p className="mt-4 text-2xl font-black text-slate-900">F1</p><p className="mt-1 text-xs text-slate-500">Ver comandos</p></div>
+          <div className="col-span-2 flex items-center justify-between bg-white px-5 py-4"><div><p className="text-sm font-bold text-slate-800">Navegue pelo teclado</p><p className="mt-1 text-xs text-slate-500">Acesse as áreas sem interromper seu fluxo.</p></div><span className="font-mono text-xs text-slate-400">F2 — F8</span></div>
         </div>
       </section>
 
-      <section className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      <div className="mb-3 flex items-end justify-between">
+        <div><p className="text-[10px] font-bold uppercase tracking-[0.22em] text-teal-700">Operação</p><h2 className="mt-1 text-xl font-black text-slate-900">Acessos do negócio</h2></div>
+        <span className="text-xs text-slate-500">Selecione uma área para continuar</span>
+      </div>
+      <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {cards.map(({ titulo, texto, href, tecla, icon: Icon }) => (
           <Link
             key={href}
             href={href}
-            className="group border border-slate-200 bg-white p-5 transition-colors hover:border-sky-300 hover:bg-sky-50/40"
+            className="group border border-slate-200 bg-white p-5 transition-colors hover:border-teal-500 hover:bg-teal-50/40"
           >
             <div className="mb-5 flex items-center justify-between">
               <span className="inline-flex h-10 w-10 items-center justify-center border border-slate-200 bg-slate-50 text-slate-700 group-hover:border-sky-300 group-hover:text-sky-700">
-                <Icon size={20} />
+                <Icon size={19} />
               </span>
-              <kbd className="border border-slate-300 bg-slate-100 px-2 py-1 font-mono text-xs font-bold text-slate-700">
+              <kbd className="border border-slate-200 bg-slate-50 px-2 py-1 font-mono text-[10px] font-bold text-slate-500">
                 {tecla}
               </kbd>
             </div>

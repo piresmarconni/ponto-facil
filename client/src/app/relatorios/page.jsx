@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  AlertCircle,
   Calendar,
-  CheckCircle,
   Clock,
   DollarSign,
   Loader2,
@@ -16,10 +14,7 @@ import {
 import toast from "react-hot-toast";
 import { listarProdutos } from "@/services/produtoService";
 import { getApiErrorMessage } from "@/services/api";
-import {
-  buscarRelatorio,
-  marcarDividaComoPaga as marcarDividaComoPagaService,
-} from "@/services/relatorioService";
+import { buscarRelatorio } from "@/services/relatorioService";
 
 const hoje = new Date();
 const seteDiasAtras = new Date(hoje);
@@ -73,37 +68,12 @@ export default function RelatoriosPage() {
     }
   }
 
-  async function marcarDividaComoPaga(dividaId) {
-    try {
-      await marcarDividaComoPagaService(dividaId);
-      toast.success("Venda fiada marcada como paga.");
-      await carregarRelatorio();
-    } catch (error) {
-      toast.error(getApiErrorMessage(error, "Erro ao baixar venda fiada."));
-    }
-  }
-
   useEffect(() => {
     carregarProdutos();
     carregarRelatorio();
     // Carregamento inicial; os filtros mudam pela acao do botao Filtrar.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const totalDividas = useMemo(
-    () =>
-      relatorio?.dividas?.reduce(
-        (total, divida) =>
-          divida.paga ? total : total + Number(divida.valor || 0),
-        0,
-      ) || 0,
-    [relatorio],
-  );
-
-  const dividasPendentes = useMemo(
-    () => (relatorio?.dividas || []).filter((divida) => !divida.paga),
-    [relatorio],
-  );
 
   const cards = [
     {
@@ -137,7 +107,7 @@ export default function RelatoriosPage() {
       <div className="flex justify-between items-start gap-6 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-800">Relatorios</h1>
-          <p className="text-gray-500">Resumo de vendas, produtos e fiado.</p>
+          <p className="text-gray-500">Resumo de vendas e produtos.</p>
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-500 bg-white border border-gray-100 px-4 py-2 rounded-xl shadow-sm">
           <Clock size={16} className="text-sky-600" />
@@ -334,115 +304,7 @@ export default function RelatoriosPage() {
             </section>
           </div>
 
-          <section className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-bold text-gray-800">
-                  Clientes com compra fiada
-                </h2>
-                <p className="text-sm text-gray-500">
-                  Total em aberto: {formatarMoeda(totalDividas)}
-                </p>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-red-50 text-red-600 font-bold text-sm">
-                <AlertCircle size={18} />
-                {dividasPendentes.length} pendencia(s)
-              </div>
-            </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-gray-50 text-[11px] uppercase text-gray-400 font-bold">
-                  <tr>
-                    <th className="px-6 py-4">Cliente</th>
-                    <th className="px-6 py-4">Data da compra</th>
-                    <th className="px-6 py-4">Produtos</th>
-                    <th className="px-6 py-4">Notificacoes</th>
-                    <th className="px-6 py-4 text-center">Status</th>
-                    <th className="px-6 py-4 text-right">Valor</th>
-                    <th className="px-6 py-4 text-right">Baixa</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {(relatorio?.dividas || []).length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan="7"
-                        className="px-6 py-10 text-center text-gray-500"
-                      >
-                        Nenhuma divida registrada.
-                      </td>
-                    </tr>
-                  ) : (
-                    relatorio.dividas.map((divida) => (
-                      <tr key={divida.id}>
-                        <td className="px-6 py-4">
-                          <p className="font-bold text-gray-700">
-                            {divida.cliente}
-                          </p>
-                          <p className="text-xs text-gray-400">
-                            {divida.email || "Sem email"}
-                          </p>
-                        </td>
-                        <td className="px-6 py-4 text-gray-600">
-                          {divida.dataCompra}
-                        </td>
-                        <td className="px-6 py-4 text-gray-500">
-                          {divida.produtos?.length
-                            ? divida.produtos.join(", ")
-                            : "Nao informado"}
-                        </td>
-                        <td className="px-6 py-4 text-gray-500">
-                          {divida.datasNotificacoes?.length
-                            ? divida.datasNotificacoes.join(", ")
-                            : "Nenhuma"}
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          <span
-                            className={`inline-flex items-center rounded-full px-3 py-1 text-[10px] font-bold uppercase ${
-                              divida.paga
-                                ? "bg-emerald-50 text-emerald-700"
-                                : "bg-red-50 text-red-600"
-                            }`}
-                          >
-                            {divida.paga ? "Pago" : "Em aberto"}
-                          </span>
-                          {divida.paga && divida.dataPagamento && (
-                            <p className="mt-1 text-xs text-gray-400">
-                              {divida.dataPagamento}
-                            </p>
-                          )}
-                        </td>
-                        <td
-                          className={`px-6 py-4 text-right font-bold ${
-                            divida.paga ? "text-gray-500" : "text-red-600"
-                          }`}
-                        >
-                          {formatarMoeda(divida.valor)}
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          {divida.paga ? (
-                            <span className="text-xs font-bold text-gray-400">
-                              Baixada
-                            </span>
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={() => marcarDividaComoPaga(divida.id)}
-                              className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-100"
-                            >
-                              <CheckCircle size={16} />
-                              Marcar paga
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </section>
         </div>
       )}
     </div>

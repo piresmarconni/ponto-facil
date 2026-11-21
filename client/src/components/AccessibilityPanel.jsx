@@ -39,7 +39,6 @@ const SHORTCUTS = {
   F6: "/funcionarios",
   F7: "/relatorios",
   F8: "/registro-ponto",
-  F9: "/cameras",
 };
 
 const HELP_SECTIONS = [
@@ -49,7 +48,7 @@ const HELP_SECTIONS = [
       "F1 ou F12 abre a ajuda do sistema.",
       "Esc fecha a ajuda aberta ou volta para o dashboard.",
       "F2 abre Vendas, F3 Produtos, F4 Clientes e F6 Funcionarios.",
-      "F7 abre Relatorios, F8 Registro de Ponto e F9 Cameras.",
+      "F7 abre Relatorios e F8 Registro de Ponto.",
     ],
   },
   {

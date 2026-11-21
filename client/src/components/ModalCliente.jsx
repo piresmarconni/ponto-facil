@@ -8,7 +8,6 @@ const ESTADO_INICIAL = {
   email: "",
   cpf: "",
   telefone: "",
-  bloqueado: false,
 };
 
 export default function ModalCliente({
@@ -29,7 +28,6 @@ export default function ModalCliente({
         email: clienteEditando.email || "",
         cpf: String(clienteEditando.cpf || ""),
         telefone: String(clienteEditando.telefone || ""),
-        bloqueado: Boolean(clienteEditando.bloqueado),
       });
     } else {
       setFormData(ESTADO_INICIAL);
@@ -52,7 +50,9 @@ export default function ModalCliente({
       return;
     }
 
-    onSave({ ...formData, cpf: cpfSomenteNumeros });
+    const dadosCliente = { ...formData };
+    delete dadosCliente.bloqueado;
+    onSave({ ...dadosCliente, cpf: cpfSomenteNumeros });
   };
 
   const tituloModal = modoVisualizacao
@@ -134,22 +134,6 @@ export default function ModalCliente({
           </div>
         </div>
 
-        <div>
-          <label className="block text-xs font-bold text-gray-400 uppercase mb-1">
-            Situação do Cliente
-          </label>
-          <select
-            required
-            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 outline-none focus:border-sky-500 font-medium text-gray-700"
-            value={formData.bloqueado ? "true" : "false"}
-            onChange={(e) =>
-              setFormData({ ...formData, bloqueado: e.target.value === "true" })
-            }
-          >
-            <option value="false">Positivo</option>
-            <option value="true">Negativado</option>
-          </select>
-        </div>
         </fieldset>
 
         {modoVisualizacao ? (

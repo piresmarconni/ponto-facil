@@ -133,14 +133,13 @@ export default function ClientesPage() {
                 <th className="px-6 py-4">Nome do Cliente</th>
                 <th className="px-6 py-4">CPF</th>
                 <th className="px-6 py-4">Contato</th>
-                <th className="px-6 py-4 text-center">Situação</th>
                 <th className="px-6 py-4 text-right">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {isLoading ? (
                 <tr>
-                  <td colSpan="5" className="px-6 py-12 text-center">
+                  <td colSpan="4" className="px-6 py-12 text-center">
                     <div className="flex flex-col items-center justify-center text-sky-500">
                       <Loader2 size={32} className="animate-spin mb-2" />
                       <p className="text-gray-500 font-medium text-sm">
@@ -152,7 +151,7 @@ export default function ClientesPage() {
               ) : clientesFiltrados.length === 0 ? (
                 <tr>
                   <td
-                    colSpan="5"
+                    colSpan="4"
                     className="px-6 py-12 text-center text-gray-500"
                   >
                     Nenhum cliente encontrado.
@@ -178,17 +177,6 @@ export default function ClientesPage() {
                         <Phone size={14} className="text-gray-400" />{" "}
                         {cliente.telefone}
                       </div>
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <span
-                        className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${
-                          cliente.bloqueado
-                            ? "bg-red-50 text-red-600"
-                            : "bg-emerald-50 text-emerald-600"
-                        }`}
-                      >
-                        {cliente.bloqueado ? "Negativado" : "Positivo"}
-                      </span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2">

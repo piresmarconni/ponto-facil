@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
-  AlertCircle,
   Banknote,
   Barcode,
   CreditCard,
@@ -100,14 +99,6 @@ export default function VendasPage() {
     [carrinho],
   );
 
-  const clienteSelecionado = clientes.find(
-    (cliente) => String(cliente.id) === clienteId,
-  );
-
-  const fiadoBloqueado =
-    tipoPagamento === "Fiado" &&
-    (!clienteSelecionado || clienteSelecionado.bloqueado);
-
   const adicionarProduto = (produto) => {
     if ((produto.quantidade || 0) <= 0) {
       toast.error("Produto sem estoque.");
@@ -191,22 +182,12 @@ export default function VendasPage() {
       valor: total,
     },
     funcionario: { id: Number(funcionarioId) },
-    ...(clienteSelecionado ? { cliente: { id: clienteSelecionado.id } } : {}),
+    ...(clienteId ? { cliente: { id: Number(clienteId) } } : {}),
   });
 
   const finalizarVenda = async () => {
     if (carrinho.length === 0) {
       toast.error("Adicione pelo menos um produto.");
-      return;
-    }
-
-    if (tipoPagamento === "Fiado" && !clienteSelecionado) {
-      toast.error("Venda fiada precisa de um cliente cadastrado.");
-      return;
-    }
-
-    if (tipoPagamento === "Fiado" && clienteSelecionado.bloqueado) {
-      toast.error("Cliente negativado nao pode comprar fiado.");
       return;
     }
 
@@ -375,6 +356,7 @@ export default function VendasPage() {
                 <thead className="bg-gray-50 text-[11px] uppercase text-gray-400 font-bold">
                   <tr>
                     <th className="px-6 py-4">Data</th>
+                    <th className="px-6 py-4">Cliente</th>
                     <th className="px-6 py-4">Itens</th>
                     <th className="px-6 py-4">Funcionario</th>
                     <th className="px-6 py-4">Pagamento</th>
@@ -385,7 +367,7 @@ export default function VendasPage() {
                   {vendas.length === 0 ? (
                     <tr>
                       <td
-                        colSpan="5"
+                        colSpan="6"
                         className="px-6 py-8 text-center text-gray-500"
                       >
                         Nenhuma venda registrada.
@@ -401,13 +383,18 @@ export default function VendasPage() {
                             {venda.dataVenda}
                           </td>
                           <td className="px-6 py-4 text-gray-500">
+                            {venda.clienteNome || "Consumidor sem cadastro"}
+                          </td>
+                          <td className="px-6 py-4 text-gray-500">
                             {venda.quantidadeProdutos || 0} produto(s)
                           </td>
                           <td className="px-6 py-4 text-gray-500">
                             {venda.funcionarioNome || "Nao informado"}
                           </td>
                           <td className="px-6 py-4 text-gray-500">
-                            {venda.tipoPagamento || "Nao informado"}
+                            {venda.tipoPagamento === "Fiado"
+                              ? "Nao informado"
+                              : venda.tipoPagamento || "Nao informado"}
                           </td>
                           <td className="px-6 py-4 text-right font-bold">
                             {formatarMoeda(venda.valorTotal)}
@@ -429,7 +416,7 @@ export default function VendasPage() {
             </div>
 
             <label className="block text-xs font-bold text-gray-400 uppercase mb-1">
-              Cliente
+              Cliente para a nota (opcional)
             </label>
             <div className="relative mb-4">
               <User
@@ -444,27 +431,11 @@ export default function VendasPage() {
                 <option value="">Consumidor sem cadastro</option>
                 {clientes.map((cliente) => (
                   <option key={cliente.id} value={cliente.id}>
-                    {cliente.nome} -{" "}
-                    {cliente.bloqueado ? "Negativado" : "Positivo"}
+                    {cliente.nome} · {cliente.cpf}
                   </option>
                 ))}
               </select>
             </div>
-
-            {clienteSelecionado && (
-              <div
-                className={`mb-4 flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold ${
-                  clienteSelecionado.bloqueado
-                    ? "bg-red-50 text-red-600"
-                    : "bg-emerald-50 text-emerald-600"
-                }`}
-              >
-                <AlertCircle size={16} />
-                {clienteSelecionado.bloqueado
-                  ? "Cliente negativado"
-                  : "Cliente positivo"}
-              </div>
-            )}
 
             <label className="block text-xs font-bold text-gray-400 uppercase mb-1">
               Funcionario responsavel
@@ -498,7 +469,6 @@ export default function VendasPage() {
                 { tipo: "Débito", icon: CreditCard },
                 { tipo: "Crédito", icon: CreditCard },
                 { tipo: "Pix", icon: FileText },
-                { tipo: "Fiado", icon: ReceiptText },
               ].map(({ tipo, icon: Icon }) => (
                 <button
                   key={tipo}
@@ -594,15 +564,9 @@ export default function VendasPage() {
                 type="button"
                 onClick={finalizarVenda}
                 className="bg-sky-600 hover:bg-sky-700 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold py-4 rounded-2xl transition-all shadow-lg"
-                title={
-                  fiadoBloqueado
-                    ? "Venda fiada exige cliente positivo"
-                    : undefined
-                }
                 disabled={
                   isSaving ||
                   carrinho.length === 0 ||
-                  fiadoBloqueado ||
                   !funcionarioId
                 }
               >

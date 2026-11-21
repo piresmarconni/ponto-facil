@@ -13,7 +13,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="pt-br">
-      <body className="bg-gray-50 text-gray-900">
+      <body className="app-body text-gray-900">
         <a
           href="#conteudo-principal"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-white focus:px-4 focus:py-3 focus:font-bold focus:text-sky-700 focus:ring-2 focus:ring-sky-600"
@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
         <div className="flex">
           <Sidebar />
 
-          <main id="conteudo-principal" className="flex-1 ml-64 min-h-screen">
+          <main id="conteudo-principal" className="app-main ml-[250px] min-h-screen flex-1">
             {children}
 
             <Toaster
